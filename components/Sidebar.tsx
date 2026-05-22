@@ -34,16 +34,6 @@ export default function Sidebar({ profile }: SidebarProps) {
     { href: '/dashboard/relatorios', label: 'Relatorios', icon: '📊' },
   ]
 
-  const coordMenu = [
-    { href: '/dashboard', label: 'Painel', icon: '🏠' },
-    { href: '/dashboard/chamada', label: 'Chamada', icon: '📋' },
-    { href: '/dashboard/notas', label: 'Notas', icon: '📝' },
-    { href: '/dashboard/alunos', label: 'Alunos', icon: '👨‍🎓' },
-    { href: '/dashboard/turmas', label: 'Turmas', icon: '🏫' },
-    { href: '/dashboard/professores', label: 'Professores', icon: '👩‍🏫' },
-    { href: '/dashboard/relatorios', label: 'Relatorios', icon: '📊' },
-  ]
-
   const secretariaMenu = [
     { href: '/dashboard', label: 'Painel', icon: '🏠' },
     { href: '/dashboard/alunos', label: 'Alunos', icon: '👨‍🎓' },
@@ -59,7 +49,7 @@ export default function Sidebar({ profile }: SidebarProps) {
 
   const menuMap: Record<string, typeof adminMenu> = {
     administrador: adminMenu,
-    coordenacao: coordMenu,
+    coordenacao: adminMenu,
     secretaria: secretariaMenu,
     professor: professorMenu,
   }
@@ -74,7 +64,6 @@ export default function Sidebar({ profile }: SidebarProps) {
 
   return (
     <aside className="w-64 bg-blue-900 text-white flex flex-col h-screen">
-      {/* Header */}
       <div className="p-5 border-b border-blue-800">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-lg">
@@ -87,7 +76,6 @@ export default function Sidebar({ profile }: SidebarProps) {
         </div>
       </div>
 
-      {/* User Info */}
       <div className="p-4 border-b border-blue-800">
         <div className="bg-blue-800 rounded-lg p-3">
           <p className="font-medium text-sm truncate">{profile.nome}</p>
@@ -95,14 +83,13 @@ export default function Sidebar({ profile }: SidebarProps) {
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {menuItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
-              ${isActive(item.href) && item.href !== '/dashboard' || (item.href === '/dashboard' && pathname === '/dashboard')
+              ${(isActive(item.href) && item.href !== '/dashboard') || (item.href === '/dashboard' && pathname === '/dashboard')
                 ? 'bg-blue-700 text-white'
                 : 'text-blue-200 hover:bg-blue-800 hover:text-white'
               }`}
@@ -113,12 +100,11 @@ export default function Sidebar({ profile }: SidebarProps) {
         ))}
       </nav>
 
-      {/* Logout */}
       <div className="p-3 border-t border-blue-800">
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-red-700 hover:text-white transition-colors disabled:opacity-50"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-blue-800 hover:text-white transition disabled:opacity-50"
         >
           <span>🚪</span>
           {isLoggingOut ? 'Saindo...' : 'Sair'}
