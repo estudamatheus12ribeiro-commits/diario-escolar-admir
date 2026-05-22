@@ -6,10 +6,14 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
   if (!profile) redirect('/login')
 
-  // Stats
   const [{ count: totalAlunos }, { count: totalTurmas }, { count: totalProfessores }] = await Promise.all([
     supabase.from('alunos').select('*', { count: 'exact', head: true }).eq('status', 'ativo'),
     supabase.from('turmas').select('*', { count: 'exact', head: true }).eq('status', 'ativa'),
@@ -22,7 +26,7 @@ export default async function DashboardPage() {
     .select('*', { count: 'exact', head: true })
     .eq('data', hoje)
 
-  const perfis: Record<string, string> = {
+  const perfilLabels: Record<string, string> = {
     administrador: 'Administrador',
     coordenacao: 'Coordenacao',
     secretaria: 'Secretaria',
@@ -35,10 +39,9 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold text-gray-900">
           Bem-vindo, {profile.nome}!
         </h1>
-        <p className="text-gray-500">{perfis[profile.perfil]} - Diario Escolar Admir</p>
+        <p className="text-gray-500">{perfilLabels[profile.perfil]} - Diario Escolar Admir</p>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard title="Alunos Ativos" value={totalAlunos || 0} color="blue" icon="students" />
         <StatCard title="Turmas Ativas" value={totalTurmas || 0} color="green" icon="classes" />
@@ -48,25 +51,24 @@ export default async function DashboardPage() {
         <StatCard title="Presencas Hoje" value={presencasHoje || 0} color="orange" icon="attendance" />
       </div>
 
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow p-6">
+      <div className="bg-white rounded-xl p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Acoes Rapidas</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <a href="/dashboard/chamada" className="flex flex-col items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition text-center">
+          <a href="/dashboard/chamada" className="flex flex-col items-center p-4 bg-blue-50 hover:bg-blue-100 transition rounded-lg text-center">
             <span className="text-2xl mb-2">📋</span>
             <span className="text-sm font-medium text-blue-700">Fazer Chamada</span>
           </a>
           {profile.perfil !== 'professor' && (
             <>
-              <a href="/dashboard/alunos" className="flex flex-col items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition text-center">
+              <a href="/dashboard/alunos" className="flex flex-col items-center p-4 bg-green-50 hover:bg-green-100 transition rounded-lg text-center">
                 <span className="text-2xl mb-2">👨‍🎓</span>
                 <span className="text-sm font-medium text-green-700">Alunos</span>
               </a>
-              <a href="/dashboard/turmas" className="flex flex-col items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition text-center">
+              <a href="/dashboard/turmas" className="flex flex-col items-center p-4 bg-purple-50 hover:bg-purple-100 transition rounded-lg text-center">
                 <span className="text-2xl mb-2">🏫</span>
                 <span className="text-sm font-medium text-purple-700">Turmas</span>
               </a>
-              <a href="/dashboard/relatorios" className="flex flex-col items-center p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition text-center">
+              <a href="/dashboard/relatorios" className="flex flex-col items-center p-4 bg-orange-50 hover:bg-orange-100 transition rounded-lg text-center">
                 <span className="text-2xl mb-2">📊</span>
                 <span className="text-sm font-medium text-orange-700">Relatorios</span>
               </a>
